@@ -269,6 +269,7 @@
             position: relative;
             width: 100%;
             height: 100vh;
+            height: 100dvh;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -279,9 +280,11 @@
 
         #sky-canvas {
             position: absolute;
-            inset: 0;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            display: block;
             z-index: 0;
         }
 
@@ -318,7 +321,7 @@
             letter-spacing: 0.42em;
             text-transform: uppercase;
             color: rgba(205, 222, 255, 0.80);
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
             text-shadow: 0 1px 20px rgba(0, 0, 0, 0.6);
             padding: 10px 28px;
             border: 1px solid rgba(182, 208, 255, 0.30);
@@ -330,11 +333,11 @@
 
         .hero h1 {
             font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: clamp(3.5rem, 9vw, 8rem);
+            font-size: clamp(2.8rem, 9vw, 8rem);
             font-weight: 300;
             line-height: 1.0;
             letter-spacing: 0.04em;
-            margin-bottom: 1.1rem;
+            margin-bottom: 1rem;
             color: #ffffff;
             text-shadow: 0 2px 40px rgba(0, 0, 0, 0.5);
         }
@@ -348,12 +351,12 @@
 
         .hero-subtitle {
             font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: clamp(0.88rem, 1.7vw, 1.2rem);
+            font-size: clamp(0.82rem, 1.7vw, 1.2rem);
             font-weight: 300;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.10em;
             color: rgba(192, 212, 255, 0.72);
             max-width: 550px;
-            margin: 0 auto 2.8rem;
+            margin: 0 auto 2rem;
             line-height: 1.7;
             text-shadow: 0 1px 18px rgba(0, 0, 0, 0.5);
         }
@@ -369,12 +372,12 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 1rem 3rem;
+            padding: 0.85rem 2.2rem;
             border-radius: 2px;
             font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 0.86rem;
+            font-size: 0.82rem;
             font-weight: 400;
-            letter-spacing: 0.28em;
+            letter-spacing: 0.22em;
             text-transform: uppercase;
             transition: all 0.35s ease;
             cursor: pointer;
@@ -432,6 +435,13 @@
         @keyframes bounce {
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(8px); }
+        }
+
+        @media(max-width:480px){
+            .hero-badge { letter-spacing: 0.22em; margin-bottom: 0.7rem; }
+            .hero h1 { font-size: clamp(2.4rem, 13vw, 4rem); margin-bottom: 0.8rem; }
+            .hero-subtitle { letter-spacing: 0.06em; margin-bottom: 1.5rem; }
+            .btn { padding: 0.75rem 1.8rem; letter-spacing: 0.16em; }
         }
 
         /* ============================================
@@ -2045,13 +2055,13 @@ void main(){
  /* ESTRATOS — nubes más grandes: xs/ys reducidos */
 
  /* Capa alta: cirrocúmulos lejanos, pequeños */
- col = cloudLayer(col,uv, 1.5,2.5,.62, .005, .63,.93, .60);
+ col = cloudLayer(col,uv, 1.1,1.8,.62, .005, .63,.93, .60);
 
  /* Capa media: cúmulos protagonistas */
- col = cloudLayer(col,uv, 1.0,1.5,.34, .009, .36,.70, .90);
+ col = cloudLayer(col,uv, 0.75,1.1,.34, .009, .36,.70, .90);
 
  /* Capa frontal: grandes cúmulos cercanos */
- col = cloudLayer(col,uv, 0.75,1.1,.11, .014, .16,.46, .98);
+ col = cloudLayer(col,uv, 0.55,0.85,.11, .014, .16,.46, .98);
 
  /* Bruma horizonte */
  col = mix(col, vec3(.58,.78,.96), smoothstep(.20,0.,uv.y)*.28);
@@ -2111,6 +2121,17 @@ function resize(){
  gl.uniform2f(uR,cv.width,cv.height);
 }
 resize();new ResizeObserver(resize).observe(hero);
+
+/* Fix altura Android — fuerza hero al viewport real */
+function fixVh(){
+ const vh=window.innerHeight;
+ hero.style.height=vh+'px';
+}
+fixVh();
+window.addEventListener('resize',fixVh);
+if('visualViewport' in window){
+ window.visualViewport.addEventListener('resize',fixVh);
+}
 
 let mx=0,my=0,sx=0,sy=0;
 document.addEventListener('mousemove',e=>{
