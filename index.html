@@ -1880,8 +1880,8 @@ function genCloudTex(sz) {
  function makePoints(n, scale) {
  return Array.from({length: n}, () => [rng() * sz * scale, rng() * sz * scale]);
  }
- const pts1 = makePoints(10, 1); // escala base — nubes más grandes y espaciadas
- const pts2 = makePoints(24, 1); // escala media — puffs secundarios
+ const pts1 = makePoints(10, 1); // escala base — nubes grandes
+ const pts2 = makePoints(22, 1); // escala media — puffs secundarios
 
  /* Worley tileable: distancia mínima al punto más cercano */
  function worley(x, y, pts, radius) {
@@ -1925,8 +1925,8 @@ function genCloudTex(sz) {
  /* Generar y normalizar */
  const raw = new Float32Array(sz * sz);
  let mn = 1e9, mx = -1e9;
- const r1 = sz * 0.22; /* radio Worley grande */
- const r2 = sz * 0.10; /* radio Worley pequeño */
+ const r1 = sz * 0.34; /* radio Worley grande */
+ const r2 = sz * 0.16; /* radio Worley pequeño */
 
  for (let y = 0; y < sz; y++) {
  for (let x = 0; x < sz; x++) {
@@ -2044,14 +2044,14 @@ void main(){
 
  /* ESTRATOS — nubes más grandes: xs/ys reducidos */
 
- /* Capa alta: cirrocúmulos lejanos */
- col = cloudLayer(col,uv, 1.6,2.8,.62, .005, .63,.93, .60);
+ /* Capa alta: cirrocúmulos lejanos, pequeños */
+ col = cloudLayer(col,uv, 1.5,2.5,.62, .005, .63,.93, .60);
 
  /* Capa media: cúmulos protagonistas */
- col = cloudLayer(col,uv, 0.9,1.4,.34, .009, .36,.70, .90);
+ col = cloudLayer(col,uv, 1.0,1.5,.34, .009, .36,.70, .90);
 
  /* Capa frontal: grandes cúmulos cercanos */
- col = cloudLayer(col,uv, 0.65,1.0,.08, .014, .16,.46, .98);
+ col = cloudLayer(col,uv, 0.75,1.1,.11, .014, .16,.46, .98);
 
  /* Bruma horizonte */
  col = mix(col, vec3(.58,.78,.96), smoothstep(.20,0.,uv.y)*.28);
