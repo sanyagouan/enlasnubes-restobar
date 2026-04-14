@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>En Las Nubes Restobar — Opción C: Puesta de Sol Mágica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow-x:hidden;font-family:'Inter',sans-serif}
+
+/* ===== SKY ===== */
+.sky{
+  position:fixed;inset:0;z-index:0;
+  background:linear-gradient(180deg,
+    #0d1b2a 0%,
+    #1b2838 15%,
+    #3d2b1f 35%,
+    #6b3a2a 50%,
+    #C4704B 65%,
+    #C9A96E 80%,
+    #D4896A 92%,
+    #e8a87c 100%
+  );
+}
+
+/* ===== SUN GLOW ===== */
+.sun{
+  position:absolute;bottom:22%;left:50%;transform:translateX(-50%);
+  width:300px;height:300px;border-radius:50%;z-index:1;
+  background:radial-gradient(circle,
+    rgba(255,220,150,.9) 0%,
+    rgba(201,169,110,.6) 25%,
+    rgba(196,112,75,.3) 50%,
+    transparent 70%
+  );
+  animation:sunPulse 4s ease-in-out infinite alternate;
+}
+.sun::after{
+  content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,169,110,.15) 0%,transparent 60%);
+  animation:sunPulse 6s ease-in-out infinite alternate-reverse;
+}
+@keyframes sunPulse{
+  0%{transform:translateX(-50%) scale(1);opacity:.8}
+  100%{transform:translateX(-50%) scale(1.15);opacity:1}
+}
+
+/* ===== GOD RAYS ===== */
+.rays{
+  position:absolute;bottom:0;left:0;width:100%;height:100%;z-index:2;
+  overflow:hidden;
+}
+.ray{
+  position:absolute;bottom:20%;left:50%;
+  width:4px;height:60vh;
+  background:linear-gradient(to top,rgba(201,169,110,.3),transparent);
+  transform-origin:bottom center;
+  animation:rayPulse 5s ease-in-out infinite alternate;
+}
+.ray:nth-child(1){transform:rotate(-25deg);opacity:.3;animation-delay:0s;height:55vh}
+.ray:nth-child(2){transform:rotate(-15deg);opacity:.5;animation-delay:.5s;height:65vh}
+.ray:nth-child(3){transform:rotate(-5deg);opacity:.4;animation-delay:1s;height:60vh}
+.ray:nth-child(4){transform:rotate(5deg);opacity:.6;animation-delay:1.5s;height:70vh}
+.ray:nth-child(5){transform:rotate(15deg);opacity:.35;animation-delay:2s;height:55vh}
+.ray:nth-child(6){transform:rotate(25deg);opacity:.45;animation-delay:2.5s;height:62vh}
+.ray:nth-child(7){transform:rotate(-20deg);opacity:.25;animation-delay:3s;height:50vh}
+.ray:nth-child(8){transform:rotate(10deg);opacity:.3;animation-delay:.8s;height:58vh}
+@keyframes rayPulse{
+  0%{opacity:.15;width:3px}
+  50%{opacity:.5;width:8px}
+  100%{opacity:.2;width:4px}
+}
+
+/* ===== CLOUDS ===== */
+.clouds-wrap{
+  position:absolute;inset:0;z-index:3;
+  perspective:800px;
+  overflow:hidden;
+}
+.cloud{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(2px);
+}
+
+/* Cloud 1 - large left */
+.c1{
+  width:280px;height:80px;top:12%;left:-5%;
+  background:linear-gradient(180deg,rgba(250,243,232,.7) 0%,rgba(201,169,110,.4) 100%);
+  border-radius:60px;
+  box-shadow:
+    60px -30px 0 15px rgba(250,243,232,.5),
+    120px -15px 0 10px rgba(240,220,190,.4),
+    30px -40px 0 20px rgba(255,240,220,.6),
+    90px -35px 0 25px rgba(201,169,110,.3),
+    -20px -10px 0 8px rgba(250,243,232,.3),
+    160px -5px 0 12px rgba(196,112,75,.2);
+  animation:drift1 45s linear infinite;
+}
+.c1::before{
+  content:'';position:absolute;top:-25px;left:80px;
+  width:100px;height:60px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(255,250,240,.5),transparent 70%);
+}
+.c1::after{
+  content:'';position:absolute;top:-15px;left:30px;
+  width:70px;height:45px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(255,240,220,.4),transparent 70%);
+}
+
+/* Cloud 2 - right mid */
+.c2{
+  width:350px;height:90px;top:22%;right:-10%;
+  background:linear-gradient(180deg,rgba(255,240,220,.6) 0%,rgba(196,112,75,.3) 100%);
+  border-radius:70px;
+  box-shadow:
+    80px -35px 0 20px rgba(255,240,220,.5),
+    150px -20px 0 15px rgba(201,169,110,.35),
+    -30px -25px 0 12px rgba(250,243,232,.4),
+    40px -45px 0 22px rgba(255,250,240,.5),
+    200px -10px 0 10px rgba(196,112,75,.2);
+  animation:drift2 55s linear infinite;
+}
+
+/* Cloud 3 - center high */
+.c3{
+  width:200px;height:60px;top:8%;left:35%;
+  background:linear-gradient(180deg,rgba(255,255,255,.5) 0%,rgba(201,169,110,.25) 100%);
+  border-radius:50px;
+  box-shadow:
+    50px -25px 0 15px rgba(255,248,235,.4),
+    100px -10px 0 10px rgba(240,230,210,.3),
+    -20px -15px 0 8px rgba(255,240,220,.3);
+  animation:drift3 65s linear infinite;
+}
+
+/* Cloud 4 - large low */
+.c4{
+  width:400px;height:100px;top:35%;left:10%;
+  background:linear-gradient(180deg,rgba(250,243,232,.5) 0%,rgba(196,112,75,.35) 100%);
+  border-radius:80px;
+  box-shadow:
+    100px -40px 0 25px rgba(255,240,220,.45),
+    200px -25px 0 18px rgba(201,169,110,.3),
+    -40px -30px 0 15px rgba(250,243,232,.35),
+    50px -55px 0 30px rgba(255,250,240,.4),
+    280px -15px 0 12px rgba(196,112,75,.2),
+    150px -50px 0 20px rgba(240,220,190,.25);
+  animation:drift4 50s linear infinite;
+}
+
+/* Cloud 5 - small high right */
+.c5{
+  width:150px;height:45px;top:5%;right:15%;
+  background:linear-gradient(180deg,rgba(255,255,255,.4) 0%,rgba(201,169,110,.2) 100%);
+  border-radius:40px;
+  box-shadow:
+    40px -18px 0 12px rgba(255,248,235,.35),
+    80px -8px 0 8px rgba(240,230,210,.25);
+  animation:drift5 70s linear infinite;
+}
+
+/* Cloud 6 - bottom left wispy */
+.c6{
+  width:320px;height:70px;top:48%;left:-8%;
+  background:linear-gradient(180deg,rgba(201,169,110,.35) 0%,rgba(196,112,75,.25) 100%);
+  border-radius:55px;
+  box-shadow:
+    70px -25px 0 15px rgba(201,169,110,.3),
+    140px -12px 0 10px rgba(196,112,75,.2),
+    -25px -15px 0 8px rgba(201,169,110,.2);
+  animation:drift6 60s linear infinite;
+}
+
+/* Cloud 7 - top center accent */
+.c7{
+  width:180px;height:50px;top:15%;left:55%;
+  background:linear-gradient(180deg,rgba(255,250,240,.45) 0%,rgba(201,169,110,.2) 100%);
+  border-radius:45px;
+  box-shadow:
+    45px -20px 0 12px rgba(255,240,220,.35),
+    90px -10px 0 8px rgba(240,220,190,.25);
+  animation:drift7 75s linear infinite;
+}
+
+@keyframes drift1{0%{transform:translateX(-100px) translateY(0)}100%{transform:translateX(calc(100vw + 100px)) translateY(10px)}}
+@keyframes drift2{0%{transform:translateX(calc(100vw + 50px)) translateY(0)}100%{transform:translateX(-400px) translateY(-8px)}}
+@keyframes drift3{0%{transform:translateX(0) translateY(0)}100%{transform:translateX(80vw) translateY(5px)}}
+@keyframes drift4{0%{transform:translateX(-200px) translateY(0)}100%{transform:translateX(calc(100vw + 200px)) translateY(-5px)}}
+@keyframes drift5{0%{transform:translateX(0) translateY(0)}100%{transform:translateX(-60vw) translateY(8px)}}
+@keyframes drift6{0%{transform:translateX(-150px)}100%{transform:translateX(calc(100vw + 150px))}}
+@keyframes drift7{0%{transform:translateX(0) translateY(0)}100%{transform:translateX(-70vw) translateY(-6px)}}
+
+/* ===== GOLDEN PARTICLES ===== */
+.particles{
+  position:absolute;inset:0;z-index:4;overflow:hidden;
+}
+.particle{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,169,110,.8),rgba(201,169,110,0));
+  animation:float linear infinite;
+}
+.particle:nth-child(1){width:4px;height:4px;left:10%;top:20%;animation-duration:12s;animation-delay:0s}
+.particle:nth-child(2){width:3px;height:3px;left:25%;top:35%;animation-duration:15s;animation-delay:2s}
+.particle:nth-child(3){width:5px;height:5px;left:45%;top:15%;animation-duration:10s;animation-delay:1s}
+.particle:nth-child(4){width:3px;height:3px;left:60%;top:40%;animation-duration:18s;animation-delay:3s}
+.particle:nth-child(5){width:4px;height:4px;left:75%;top:25%;animation-duration:14s;animation-delay:0.5s}
+.particle:nth-child(6){width:2px;height:2px;left:85%;top:30%;animation-duration:16s;animation-delay:4s}
+.particle:nth-child(7){width:3px;height:3px;left:35%;top:50%;animation-duration:13s;animation-delay:1.5s}
+.particle:nth-child(8){width:4px;height:4px;left:15%;top:55%;animation-duration:11s;animation-delay:2.5s}
+.particle:nth-child(9){width:2px;height:2px;left:55%;top:18%;animation-duration:17s;animation-delay:5s}
+.particle:nth-child(10){width:3px;height:3px;left:90%;top:45%;animation-duration:12s;animation-delay:3.5s}
+.particle:nth-child(11){width:4px;height:4px;left:5%;top:42%;animation-duration:14s;animation-delay:1s}
+.particle:nth-child(12){width:2px;height:2px;left:70%;top:10%;animation-duration:19s;animation-delay:6s}
+@keyframes float{
+  0%{transform:translateY(0) translateX(0);opacity:0}
+  10%{opacity:.8}
+  50%{transform:translateY(-80px) translateX(30px);opacity:.6}
+  90%{opacity:.3}
+  100%{transform:translateY(-160px) translateX(-20px);opacity:0}
+}
+
+/* ===== GROUND FOG ===== */
+.fog{
+  position:absolute;bottom:0;left:0;width:100%;height:30%;z-index:5;
+  background:linear-gradient(to top,
+    rgba(44,24,16,.85) 0%,
+    rgba(74,50,40,.5) 30%,
+    rgba(196,112,75,.15) 60%,
+    transparent 100%
+  );
+}
+.fog::before{
+  content:'';position:absolute;bottom:0;left:-10%;width:120%;height:40%;
+  background:linear-gradient(to top,rgba(201,169,110,.08),transparent);
+  border-radius:50%;
+  animation:fogWave 8s ease-in-out infinite alternate;
+}
+.fog::after{
+  content:'';position:absolute;bottom:5%;left:-5%;width:110%;height:35%;
+  background:linear-gradient(to top,rgba(196,112,75,.06),transparent);
+  border-radius:50%;
+  animation:fogWave 10s ease-in-out infinite alternate-reverse;
+}
+@keyframes fogWave{
+  0%{transform:translateX(-3%) scaleY(1)}
+  100%{transform:translateX(3%) scaleY(1.1)}
+}
+
+/* ===== STARS ===== */
+.stars{
+  position:absolute;top:0;left:0;width:100%;height:40%;z-index:1;
+}
+.star{
+  position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;
+  animation:twinkle 3s ease-in-out infinite alternate;
+}
+.star:nth-child(1){top:5%;left:12%;animation-delay:0s;width:1.5px;height:1.5px}
+.star:nth-child(2){top:8%;left:28%;animation-delay:.5s}
+.star:nth-child(3){top:3%;left:45%;animation-delay:1s;width:1px;height:1px}
+.star:nth-child(4){top:12%;left:62%;animation-delay:1.5s}
+.star:nth-child(5){top:6%;left:78%;animation-delay:2s;width:2.5px;height:2.5px}
+.star:nth-child(6){top:15%;left:90%;animation-delay:.3s;width:1px;height:1px}
+.star:nth-child(7){top:2%;left:35%;animation-delay:2.5s}
+.star:nth-child(8){top:18%;left:5%;animation-delay:1.8s;width:1.5px;height:1.5px}
+.star:nth-child(9){top:10%;left:52%;animation-delay:.7s}
+.star:nth-child(10){top:7%;left:85%;animation-delay:2.2s;width:1px;height:1px}
+@keyframes twinkle{0%{opacity:.2;transform:scale(.8)}100%{opacity:1;transform:scale(1.2)}}
+
+/* ===== CONTENT ===== */
+.content{
+  position:relative;z-index:10;height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;color:#FAF3E8;padding:2rem;
+}
+.badge{
+  display:inline-block;padding:.5rem 1.5rem;
+  border:1px solid rgba(201,169,110,.5);border-radius:50px;
+  font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;
+  color:#C9A96E;margin-bottom:1.5rem;
+  backdrop-filter:blur(4px);background:rgba(44,24,16,.3);
+}
+h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.5rem,7vw,5.5rem);font-weight:700;
+  line-height:1.1;margin-bottom:1rem;
+  text-shadow:0 4px 30px rgba(0,0,0,.5);
+}
+h1 .nubes{color:#C9A96E;font-style:italic}
+.subtitle{
+  font-size:clamp(1rem,2.5vw,1.25rem);font-weight:300;
+  max-width:600px;line-height:1.6;color:rgba(250,243,232,.85);
+  margin-bottom:2.5rem;text-shadow:0 2px 10px rgba(0,0,0,.3);
+}
+.buttons{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+.btn{
+  display:inline-block;padding:.9rem 2.2rem;border-radius:50px;
+  font-family:'Inter',sans-serif;font-size:.95rem;font-weight:500;
+  text-decoration:none;transition:all .3s ease;cursor:pointer;
+}
+.btn-primary{
+  background:#C4704B;color:#FAF3E8;border:none;
+  box-shadow:0 4px 20px rgba(196,112,75,.4);
+}
+.btn-primary:hover{background:#d4825e;transform:translateY(-2px);box-shadow:0 6px 30px rgba(196,112,75,.6)}
+.btn-outline{background:transparent;color:#C9A96E;border:1.5px solid #C9A96E}
+.btn-outline:hover{background:rgba(201,169,110,.15);transform:translateY(-2px)}
+
+.label{
+  position:fixed;top:1.2rem;left:50%;transform:translateX(-50%);z-index:20;
+  background:rgba(196,112,75,.9);color:#FAF3E8;
+  padding:.45rem 1.4rem;border-radius:50px;
+  font-size:.8rem;font-weight:600;letter-spacing:.08em;
+  backdrop-filter:blur(8px);white-space:nowrap;
+}
+
+/* ===== PARALLAX SCROLL ===== */
+.parallax-container{
+  height:200vh;position:relative;
+}
+.sticky{
+  position:sticky;top:0;height:100vh;overflow:hidden;
+}
+</style>
+</head>
+<body>
+<div class="label">🌅 OPCIÓN C — Puesta de Sol Mágica (CSS Only)</div>
+
+<div class="sky">
+  <div class="stars">
+    <div class="star"></div><div class="star"></div><div class="star"></div>
+    <div class="star"></div><div class="star"></div><div class="star"></div>
+    <div class="star"></div><div class="star"></div><div class="star"></div>
+    <div class="star"></div>
+  </div>
+
+  <div class="sun"></div>
+
+  <div class="rays">
+    <div class="ray"></div><div class="ray"></div><div class="ray"></div>
+    <div class="ray"></div><div class="ray"></div><div class="ray"></div>
+    <div class="ray"></div><div class="ray"></div>
+  </div>
+
+  <div class="clouds-wrap">
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
+    <div class="cloud c3"></div>
+    <div class="cloud c4"></div>
+    <div class="cloud c5"></div>
+    <div class="cloud c6"></div>
+    <div class="cloud c7"></div>
+  </div>
+
+  <div class="particles">
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+  </div>
+
+  <div class="fog"></div>
+</div>
+
+<div class="content">
+  <span class="badge">Cocina Fusión · Logroño</span>
+  <h1>En Las <span class="nubes">Nubes</span><br>Restobar</h1>
+  <p class="subtitle">Donde la gastronomía se eleva sobre las nubes. Sabores que transportan, momentos que permanecen.</p>
+  <div class="buttons">
+    <a class="btn btn-primary" href="#">Reservar Mesa</a>
+    <a class="btn btn-outline" href="#">Ver Carta</a>
+  </div>
+</div>
+</body>
+</html>

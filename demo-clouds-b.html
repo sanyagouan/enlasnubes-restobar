@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>En Las Nubes Restobar — Opción B: Nubes Vivientes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{overflow:hidden;font-family:'Inter',sans-serif;background:#0a0605}
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+.overlay{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#FAF3E8;padding:2rem}
+.badge{display:inline-block;padding:.5rem 1.5rem;border:1px solid rgba(201,169,110,.5);border-radius:50px;font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A96E;margin-bottom:1.5rem;backdrop-filter:blur(4px);background:rgba(44,24,16,.3)}
+h1{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,7vw,5.5rem);font-weight:700;line-height:1.1;margin-bottom:1rem;text-shadow:0 4px 30px rgba(0,0,0,.6)}
+h1 .nubes{color:#C9A96E;font-style:italic}
+.subtitle{font-size:clamp(1rem,2.5vw,1.25rem);font-weight:300;max-width:600px;line-height:1.6;color:rgba(250,243,232,.8);margin-bottom:2.5rem}
+.buttons{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+.btn{display:inline-block;padding:.9rem 2.2rem;border-radius:50px;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:500;text-decoration:none;transition:all .3s ease;cursor:pointer}
+.btn-primary{background:#C4704B;color:#FAF3E8;border:none;box-shadow:0 4px 20px rgba(196,112,75,.4)}
+.btn-primary:hover{background:#d4825e;transform:translateY(-2px);box-shadow:0 6px 30px rgba(196,112,75,.6)}
+.btn-outline{background:transparent;color:#C9A96E;border:1.5px solid #C9A96E}
+.btn-outline:hover{background:rgba(201,169,110,.15);transform:translateY(-2px)}
+.label{position:fixed;top:1.2rem;left:50%;transform:translateX(-50%);z-index:10;background:rgba(196,112,75,.9);color:#FAF3E8;padding:.45rem 1.4rem;border-radius:50px;font-size:.8rem;font-weight:600;letter-spacing:.08em;backdrop-filter:blur(8px);white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="label">✨ OPCIÓN B — Nubes Vivientes (Canvas Animado)</div>
+<canvas id="c"></canvas>
+<div class="overlay">
+  <span class="badge">Cocina Fusión · Logroño</span>
+  <h1>En Las <span class="nubes">Nubes</span><br>Restobar</h1>
+  <p class="subtitle">Donde la gastronomía se eleva sobre las nubes. Sabores que transportan, momentos que permanecen.</p>
+  <div class="buttons">
+    <a class="btn btn-primary" href="#">Reservar Mesa</a>
+    <a class="btn btn-outline" href="#">Ver Carta</a>
+  </div>
+</div>
+<script>
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+let W,H,mx=0,my=0;
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+window.addEventListener('resize',resize);resize();
+document.addEventListener('mousemove',e=>{mx=(e.clientX/W-.5)*2;my=(e.clientY/H-.5)*2});
+
+// Stars
+const stars=Array.from({length:120},()=>({
+  x:Math.random(),y:Math.random()*.55,
+  r:Math.random()*1.5+.3,
+  twinkle:Math.random()*Math.PI*2,
+  speed:Math.random()*.02+.005
+}));
+
+// Cloud puff: a single radial gradient circle
+class Puff{
+  constructor(x,y,r,color,alpha){
+    this.x=x;this.y=y;this.r=Math.max(1,r);this.color=color;this.alpha=alpha;
+  }
+}
+
+// Cloud: group of puffs
+class Cloud{
+  constructor(config){
+    this.puffs=[];
+    this.speed=config.speed||.2;
+    this.depth=config.depth||1; // 0=far, 1=mid, 2=near
+    this.parallaxFactor=config.depth===0?.01:config.depth===1?.025:.05;
+    this.y=config.y||Math.random()*.6;
+    this.x=config.x!==undefined?config.x:Math.random()*1.4-.2;
+    this.alpha=config.alpha||1;
+    const colors=config.colors||['255,255,255'];
+    const count=config.puffCount||6+Math.floor(Math.random()*6);
+    const baseR=config.baseR||40+Math.random()*30;
+    for(let i=0;i<count;i++){
+      const px=(Math.random()-.5)*baseR*3;
+      const py=(Math.random()-.5)*baseR*1.2;
+      const pr=baseR*(.5+Math.random()*.8);
+      const c=colors[Math.floor(Math.random()*colors.length)];
+      const a=(.15+Math.random()*.25)*this.alpha;
+      this.puffs.push(new Puff(px,py,pr,c,a));
+    }
+  }
+  draw(ctx,t){
+    const cx=(this.x*t*.01*this.speed)%1.6-.3;
+    const ox=mx*this.parallaxFactor*W;
+    const oy=my*this.parallaxFactor*H*.3;
+    for(const p of this.puffs){
+      const grd=ctx.createRadialGradient(
+        cx*W+p.x+ox, this.y*H+p.y+oy, 0,
+        cx*W+p.x+ox, this.y*H+p.y+oy, p.r
+      );
+      grd.addColorStop(0,`rgba(${p.color},${p.alpha})`);
+      grd.addColorStop(.6,`rgba(${p.color},${p.alpha*.4})`);
+      grd.addColorStop(1,`rgba(${p.color},0)`);
+      ctx.fillStyle=grd;
+      ctx.beginPath();
+      ctx.arc(cx*W+p.x+ox, this.y*H+p.y+oy, p.r, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+}
+
+// Create clouds in 3 layers
+const clouds=[];
+// Background (slow, faded)
+for(let i=0;i<4;i++){
+  clouds.push(new Cloud({
+    speed:.08+Math.random()*.06, depth:0,
+    y:.1+Math.random()*.35,
+    colors:['255,255,255','240,230,210'],
+    alpha:.25+Math.random()*.15,
+    puffCount:4+Math.floor(Math.random()*3),
+    baseR:50+Math.random()*40
+  }));
+}
+// Mid layer
+for(let i=0;i<5;i++){
+  clouds.push(new Cloud({
+    speed:.15+Math.random()*.1, depth:1,
+    y:.15+Math.random()*.4,
+    colors:['255,248,235','255,240,220','201,169,110'],
+    alpha:.35+Math.random()*.2,
+    puffCount:5+Math.floor(Math.random()*5),
+    baseR:35+Math.random()*30
+  }));
+}
+// Foreground (fast, visible)
+for(let i=0;i<3;i++){
+  clouds.push(new Cloud({
+    speed:.25+Math.random()*.15, depth:2,
+    y:.2+Math.random()*.45,
+    colors:['255,250,240','255,240,220','201,169,110'],
+    alpha:.5+Math.random()*.25,
+    puffCount:6+Math.floor(Math.random()*5),
+    baseR:30+Math.random()*25
+  }));
+}
+
+function drawSky(){
+  const grd=ctx.createLinearGradient(0,0,0,H);
+  grd.addColorStop(0,'#0a0605');
+  grd.addColorStop(.3,'#2C1810');
+  grd.addColorStop(.6,'#4A3228');
+  grd.addColorStop(1,'#5C4033');
+  ctx.fillStyle=grd;
+  ctx.fillRect(0,0,W,H);
+}
+
+function drawStars(t){
+  for(const s of stars){
+    const alpha=.3+Math.sin(s.twinkle+t*s.speed*60)*.5+.2;
+    ctx.fillStyle=`rgba(255,245,220,${alpha})`;
+    ctx.beginPath();
+    ctx.arc(s.x*W,s.y*H,s.r,0,Math.PI*2);
+    ctx.fill();
+  }
+}
+
+function drawFog(){
+  const grd=ctx.createLinearGradient(0,H*.75,0,H);
+  grd.addColorStop(0,'rgba(92,64,51,0)');
+  grd.addColorStop(.4,'rgba(74,50,40,.25)');
+  grd.addColorStop(.7,'rgba(44,24,16,.45)');
+  grd.addColorStop(1,'rgba(10,6,5,.8)');
+  ctx.fillStyle=grd;
+  ctx.fillRect(0,H*.7,W,H*.3);
+  // Extra wavy fog
+  for(let i=0;i<3;i++){
+    const y=H*.82+i*25;
+    ctx.fillStyle=`rgba(201,169,110,${.03+i*.01})`;
+    ctx.beginPath();
+    ctx.moveTo(0,y);
+    for(let x=0;x<=W;x+=20){
+      ctx.lineTo(x,y+Math.sin(x*.005+i*2)*15);
+    }
+    ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.fill();
+  }
+}
+
+let t=0;
+function animate(){
+  t++;
+  ctx.clearRect(0,0,W,H);
+  drawSky();
+  drawStars(t);
+  // Sort by depth, draw back to front
+  const sorted=[...clouds].sort((a,b)=>a.depth-b.depth);
+  for(const c of sorted) c.draw(ctx,t);
+  drawFog();
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>
