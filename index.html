@@ -22,8 +22,11 @@
         }
 
         :root {
-            --cream: #FBF0E0;
-            --cream-dark: #F5E6D0;
+            --cream: #9BB3B9;
+            --cream-dark: #8AA3AA;
+            --cream-light: #A8C4CA;
+            --sky-blue: #9BB3B9;
+            --sky-light: #AECDD4;
             --beige: #EAD0A8;
             --terracotta: #C86B42;
             --terracotta-dark: #A85A3A;
@@ -50,6 +53,111 @@
             line-height: 1.7;
             overflow-x: hidden;
             position: relative;
+        }
+
+        /* ============================================
+           ANIMATED CLOUDS — Floating behind content
+           ============================================ */
+        .cloud-bg {
+            position: relative;
+            overflow: hidden;
+        }
+        .cloud-bg::before,
+        .cloud-bg::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .cloud-bg::before {
+            background:
+                radial-gradient(ellipse 300px 100px at 15% 30%, rgba(255,255,255,0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 400px 120px at 70% 60%, rgba(255,255,255,0.14) 0%, transparent 70%),
+                radial-gradient(ellipse 250px 80px at 45% 80%, rgba(255,255,255,0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 350px 110px at 85% 20%, rgba(255,255,255,0.16) 0%, transparent 70%);
+            animation: cloudDrift1 35s ease-in-out infinite alternate;
+        }
+        .cloud-bg::after {
+            background:
+                radial-gradient(ellipse 200px 70px at 30% 50%, rgba(255,255,255,0.10) 0%, transparent 70%),
+                radial-gradient(ellipse 320px 90px at 60% 25%, rgba(255,255,255,0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 280px 85px at 10% 75%, rgba(255,255,255,0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 180px 60px at 90% 45%, rgba(255,255,255,0.10) 0%, transparent 70%);
+            animation: cloudDrift2 28s ease-in-out infinite alternate;
+        }
+        @keyframes cloudDrift1 {
+            0% { transform: translateX(0) scaleX(1); }
+            50% { transform: translateX(-30px) scaleX(1.04); }
+            100% { transform: translateX(25px) scaleX(0.97); }
+        }
+        @keyframes cloudDrift2 {
+            0% { transform: translateX(15px) translateY(0); }
+            50% { transform: translateX(-25px) translateY(6px); }
+            100% { transform: translateX(40px) translateY(-4px); }
+        }
+        .cloud-bg .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* SVG floating clouds */
+        .float-cloud {
+            position: absolute;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.07;
+            fill: white;
+        }
+        .float-cloud:nth-child(1) { top: 8%; left: -8%; animation: floatC 45s linear infinite; }
+        .float-cloud:nth-child(2) { top: 45%; left: 15%; opacity: 0.05; animation: floatC 60s linear infinite; animation-delay: -18s; }
+        .float-cloud:nth-child(3) { top: 25%; left: 50%; opacity: 0.06; animation: floatC 50s linear infinite; animation-delay: -28s; }
+        .float-cloud:nth-child(4) { top: 65%; left: 70%; opacity: 0.04; animation: floatC 55s linear infinite; animation-delay: -12s; }
+        .float-cloud:nth-child(5) { top: 12%; left: 80%; opacity: 0.06; animation: floatC 40s linear infinite; animation-delay: -22s; }
+        @keyframes floatC {
+            0% { transform: translateX(-20vw); }
+            100% { transform: translateX(110vw); }
+        }
+
+        /* ============================================
+           COOKIE BANNER — RGPD
+           ============================================ */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: rgba(44, 24, 16, 0.95);
+            color: #FEFCF9;
+            padding: 18px 24px;
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            gap: 16px;
+            font-size: 13px;
+            line-height: 1.5;
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(212,168,67,0.3);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+        }
+        .cookie-banner.show { display: flex; }
+        .cookie-banner p { flex: 1; margin: 0; }
+        .cookie-banner a { color: var(--gold-light); text-decoration: underline; }
+        .cookie-btn {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .cookie-accept { background: var(--gold); color: var(--brown-dark); }
+        .cookie-accept:hover { background: var(--gold-light); }
+        .cookie-reject { background: transparent; color: var(--cream); border: 1px solid rgba(255,255,255,0.3); }
+        .cookie-reject:hover { background: rgba(255,255,255,0.1); }
+        @media (max-width: 640px) {
+            .cookie-banner { flex-direction: column; text-align: center; gap: 12px; }
         }
 
         /* Texture overlay */
@@ -447,7 +555,7 @@
            ============================================ */
         .about {
             padding: 100px 0;
-            background: linear-gradient(180deg, var(--cream) 0%, #faf0dc 50%, var(--cream) 100%);
+            background: linear-gradient(180deg, var(--cream) 0%, var(--cream-light) 50%, var(--cream) 100%);
             position: relative;
         }
 
@@ -736,7 +844,7 @@
            ============================================ */
         .menu {
             padding: 100px 0;
-            background: linear-gradient(180deg, var(--cream) 0%, #faf0dc 50%, var(--cream) 100%);
+            background: linear-gradient(180deg, var(--cream) 0%, var(--cream-light) 50%, var(--cream) 100%);
             position: relative;
         }
 
@@ -1528,12 +1636,17 @@
     <!-- Cloud divider: hero → about -->
     <div class="cloud-divider">
         <svg viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,50 C80,90 160,20 280,55 C380,85 480,15 600,45 C700,75 800,10 920,40 C1020,70 1120,15 1240,50 C1340,80 1400,30 1440,50 L1440,90 L0,90 Z" fill="#FBF0E0"/>
+            <path d="M0,50 C80,90 160,20 280,55 C380,85 480,15 600,45 C700,75 800,10 920,40 C1020,70 1120,15 1240,50 C1340,80 1400,30 1440,50 L1440,90 L0,90 Z" fill="#9BB3B9"/>
         </svg>
     </div>
 
     <!-- ========== ABOUT ========== -->
-    <section class="about" id="about">
+    <section class="about cloud-bg" id="about">
+        <svg class="float-cloud" viewBox="0 0 200 80" width="280"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+        <svg class="float-cloud" viewBox="0 0 200 80" width="220"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+        <svg class="float-cloud" viewBox="0 0 200 80" width="320"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+        <svg class="float-cloud" viewBox="0 0 200 80" width="200"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+        <svg class="float-cloud" viewBox="0 0 200 80" width="260"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
         <div class="container">
             <div class="about-images">
                 <div class="about-img-main">
@@ -1589,11 +1702,15 @@
     </section>
 
     <!-- Cloud divider: specialties → menu -->
-    <div class="cloud-divider"><svg viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,45 C120,85 240,8 400,42 C520,78 640,12 800,48 C920,82 1060,15 1200,50 C1320,80 1400,25 1440,45 L1440,90 L0,90 Z" fill="#FBF0E0"/></svg></div>
+    <div class="cloud-divider"><svg viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,45 C120,85 240,8 400,42 C520,78 640,12 800,48 C920,82 1060,15 1200,50 C1320,80 1400,25 1440,45 L1440,90 L0,90 Z" fill="#9BB3B9"/></svg></div>
 
     <!-- ========== MENU ========== -->
-    <section class="menu" id="menu">
-        <div class="container">
+    <section class="menu cloud-bg" id="menu">
+        <svg class="float-cloud" viewBox="0 0 200 80" width="280"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+        <svg class="float-cloud" viewBox="0 0 200 80" width="220"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+        <svg class="float-cloud" viewBox="0 0 200 80" width="320"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+        <svg class="float-cloud" viewBox="0 0 200 80" width="200"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+                <div class="container">
             <div class="section-header">
                 <div class="label"><svg class="cloud-icon" viewBox="0 0 40 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:12px;"><path d="M8,20 C4.5,20 2,17.5 2,14.5 C2,11.8 4,9.6 6.5,9.2 C6.8,6.2 9.4,4 12.5,4 C14.8,4 16.8,5.2 17.8,7 C18.5,6.4 19.5,6 20.5,6 C22.8,6 24.7,7.8 24.8,10.2 C27.2,10.6 29,12.6 29,15 C29,17.8 26.8,20 24,20 Z" fill="currentColor" opacity="0.5"/></svg> Nuestra Carta</div>
                 <h2>Menú</h2>
@@ -1626,11 +1743,15 @@
     </section>
 
     <!-- Cloud divider: menu → gallery -->
-    <div class="cloud-divider"><svg viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,42 C90,80 180,8 320,48 C430,82 540,12 680,45 C780,78 880,10 1020,42 C1120,72 1220,12 1340,48 C1400,65 1440,35 1440,42 L1440,90 L0,90 Z" fill="#FBF0E0"/></svg></div>
+    <div class="cloud-divider"><svg viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,42 C90,80 180,8 320,48 C430,82 540,12 680,45 C780,78 880,10 1020,42 C1120,72 1220,12 1340,48 C1400,65 1440,35 1440,42 L1440,90 L0,90 Z" fill="#9BB3B9"/></svg></div>
 
     <!-- ========== GALLERY ========== -->
-    <section class="gallery" id="gallery">
-        <div class="container">
+    <section class="gallery cloud-bg" id="gallery">
+        <svg class="float-cloud" viewBox="0 0 200 80" width="280"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+        <svg class="float-cloud" viewBox="0 0 200 80" width="220"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+        <svg class="float-cloud" viewBox="0 0 200 80" width="320"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+        <svg class="float-cloud" viewBox="0 0 200 80" width="200"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+                <div class="container">
             <div class="section-header">
                 <div class="label"><svg class="cloud-icon" viewBox="0 0 40 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:12px;"><path d="M8,20 C4.5,20 2,17.5 2,14.5 C2,11.8 4,9.6 6.5,9.2 C6.8,6.2 9.4,4 12.5,4 C14.8,4 16.8,5.2 17.8,7 C18.5,6.4 19.5,6 20.5,6 C22.8,6 24.7,7.8 24.8,10.2 C27.2,10.6 29,12.6 29,15 C29,17.8 26.8,20 24,20 Z" fill="currentColor" opacity="0.5"/></svg> Nuestro Espacio</div>
                 <h2>Galería</h2>
@@ -1683,11 +1804,15 @@
     </section>
 
     <!-- Cloud divider: reviews → contact -->
-    <div class="cloud-divider"><svg viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,48 C180,10 360,82 540,42 C720,5 900,80 1080,45 C1200,15 1340,65 1440,40 L1440,90 L0,90 Z" fill="#FBF0E0"/></svg></div>
+    <div class="cloud-divider"><svg viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,48 C180,10 360,82 540,42 C720,5 900,80 1080,45 C1200,15 1340,65 1440,40 L1440,90 L0,90 Z" fill="#9BB3B9"/></svg></div>
 
     <!-- ========== CONTACT ========== -->
-    <section class="contact" id="contact">
-        <div class="container">
+    <section class="contact cloud-bg" id="contact">
+        <svg class="float-cloud" viewBox="0 0 200 80" width="280"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+        <svg class="float-cloud" viewBox="0 0 200 80" width="220"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+        <svg class="float-cloud" viewBox="0 0 200 80" width="320"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+        <svg class="float-cloud" viewBox="0 0 200 80" width="200"><path d="M30,60 C15,60 5,50 5,38 C5,28 12,20 22,18 C24,8 35,0 48,0 C58,0 67,5 72,13 C75,10 80,8 86,8 C98,8 108,18 108,30 C118,26 130,32 130,44 C130,56 120,60 110,60 Z"/></svg>
+                <div class="container">
             <div class="section-header">
                 <div class="label"><svg class="cloud-icon" viewBox="0 0 40 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:12px;"><path d="M8,20 C4.5,20 2,17.5 2,14.5 C2,11.8 4,9.6 6.5,9.2 C6.8,6.2 9.4,4 12.5,4 C14.8,4 16.8,5.2 17.8,7 C18.5,6.4 19.5,6 20.5,6 C22.8,6 24.7,7.8 24.8,10.2 C27.2,10.6 29,12.6 29,15 C29,17.8 26.8,20 24,20 Z" fill="currentColor" opacity="0.5"/></svg> Ven a visitarnos</div>
                 <h2>Contacto</h2>
@@ -2151,5 +2276,18 @@ requestAnimationFrame(loop);
 }
     </script>
 
+
+
+    <!-- Cookie Banner RGPD -->
+    <div class="cookie-banner" id="cookieBanner">
+        <p>🍪 Utilizamos cookies propias para mejorar tu experiencia. Al continuar navegando, aceptas nuestra <a href="/politica-privacidad">política de privacidad</a>.</p>
+        <button class="cookie-btn cookie-accept" onclick="acceptCookies()">Aceptar</button>
+        <button class="cookie-btn cookie-reject" onclick="rejectCookies()">Solo necesarias</button>
+    </div>
+    <script>
+    function acceptCookies(){document.getElementById('cookieBanner').classList.remove('show');localStorage.setItem('cookies_accepted','true');document.cookie='cookies_accepted=true;max-age=31536000;path=/;SameSite=Lax'}
+    function rejectCookies(){document.getElementById('cookieBanner').classList.remove('show');localStorage.setItem('cookies_accepted','rejected');document.cookie='cookies_accepted=rejected;max-age=31536000;path=/;SameSite=Lax'}
+    if(!localStorage.getItem('cookies_accepted')&&!document.cookie.includes('cookies_accepted')){document.getElementById('cookieBanner').classList.add('show')}
+    </script>
 
 </html>
